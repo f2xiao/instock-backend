@@ -4,5 +4,6 @@ const warehouseController = require("../controllers/warehouse-controller");
 
 router.route("/").get(warehouseController.getAll);
 
-module.exports = router;
+router.route("/:id").get(warehouseController.findOne);
 
+module.exports = router;
