@@ -1,5 +1,4 @@
 const knex = require("knex")(require("../knexfile"));
-const { v4: uuidv4 } = require("uuid");
 
 const getAll = async (_req, res) => {
   try {
@@ -72,7 +71,6 @@ const createWarehouse = async (req, res) => {
 
   try {
     await knex("warehouses").insert({
-      id: uuidv4(),
       warehouse_name,
       address,
       city,
@@ -84,7 +82,6 @@ const createWarehouse = async (req, res) => {
     });
 
     res.status(201).json({
-      id: uuidv4(),
       warehouse_name,
       address,
       city,
@@ -96,7 +93,7 @@ const createWarehouse = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to create warehouse" });
+    res.status(500).json(error);
   }
 };
 
