@@ -1,8 +1,7 @@
 const router = require("express").Router();
 
-router.get("/", (req, res) => {
-  res.json({message:"inventories data"})
-});
+const inventoryController = require("../controllers/inventory-controller");
 
+router.route("/").get(inventoryController.getAll);
 
 module.exports = router;
