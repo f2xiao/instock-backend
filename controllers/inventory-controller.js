@@ -91,9 +91,43 @@ const updateInventory = async (req, res) => {
   }
 };
 
+//Get a single inventory
+const getInventoryById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Retrieve the inventory item with the given ID
+    const inventoryItem = await knex("inventories")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where("inventories.id", id)
+      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+      .first();
+
+    if (!inventoryItem) {
+      return res
+        .status(404)
+        .json({ error: `Inventory item with ID ${id} not found` });
+    }
+
+    res.status(200).json(inventoryItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve inventory item" });
+  }
+};
+
 module.exports = {
   getAll,
   validateRequestBody,
   createInventory,
   updateInventory,
+  getInventoryById,
 };

@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 const inventoryController = require("../controllers/inventory-controller");
 
 // Retrieve all inventory items
@@ -18,5 +17,8 @@ router.put(
   inventoryController.validateRequestBody,
   inventoryController.updateInventory
 );
+
+// Get details about a single inventory item
+router.get("/:id", inventoryController.getInventoryById);
 
 module.exports = router;
