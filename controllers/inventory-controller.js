@@ -56,8 +56,44 @@ const createInventory = async (req, res) => {
   }
 };
 
+const updateInventory = async (req, res) => {
+  const { id } = req.params;
+  const { warehouse_id, item_name, description, category, status, quantity } =
+    req.body;
+
+  try {
+    // Check if the inventory item with the given ID exists
+    const inventoryItem = await knex("inventories").where({ id }).first();
+    if (!inventoryItem) {
+      return res
+        .status(404)
+        .json({ error: `Inventory item with ID ${id} not found` });
+    }
+
+    // Update the inventory item with the new data
+    await knex("inventories").where({ id }).update({
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity,
+    });
+
+    // Fetch the updated inventory item
+    const updatedInventoryItem = await knex("inventories")
+      .where({ id })
+      .first();
+    res.status(200).json(updatedInventoryItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update inventory item" });
+  }
+};
+
 module.exports = {
   getAll,
   validateRequestBody,
   createInventory,
+  updateInventory,
 };
