@@ -9,6 +9,34 @@ const getAll = async (_req, res) => {
   }
 };
 
+const getInventoriesByWarehouseId = async (req, res) => {
+  const warehouseId = req.params.id;
+
+  try {
+    // Check if the warehouse with the given ID exists
+    const warehouse = await knex("warehouses")
+      .where({ id: warehouseId })
+      .first();
+    if (!warehouse) {
+      return res
+        .status(404)
+        .json({ error: `Warehouse with ID ${warehouseId} not found` });
+    }
+
+    // Retrieve all inventories associated with the warehouse
+    const inventories = await knex("inventories").where({
+      warehouse_id: warehouseId,
+    });
+
+    res.status(200).json(inventories);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve inventories for the warehouse" });
+  }
+};
+
 // Function to validate email address using regex
 const isValidEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -167,6 +195,7 @@ const findOne = async (req, res) => {
 module.exports = {
   validateRequestBody,
   createWarehouse,
+  getInventoriesByWarehouseId,
   updateWarehouse,
   getAll,
   findOne,

@@ -16,6 +16,9 @@ router.put(
   warehouseController.updateWarehouse
 );
 
+// Retrieve all inventories for a given warehouse ID
+router.get("/:id/inventories", warehouseController.getInventoriesByWarehouseId);
+
 // Retrieve all warehouses
 router.route("/").get(warehouseController.getAll);
 
