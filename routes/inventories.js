@@ -21,4 +21,7 @@ router.put(
 // Get details about a single inventory item
 router.get("/:id", inventoryController.getInventoryById);
 
+// Delete a single inventory item
+router.delete("/:id", inventoryController.deleteInventory);
+
 module.exports = router;
