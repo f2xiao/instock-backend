@@ -56,7 +56,7 @@ const validateRequestBody = (req, res, next) => {
 
   next();
 };
-
+// PUT create new warehouse function
 const createWarehouse = async (req, res) => {
   const {
     warehouse_name,
@@ -94,7 +94,55 @@ const createWarehouse = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
-    
+  }
+};
+
+// PUT/EDIT NEW WAREHOUSE
+const updateWarehouse = async (req, res) => {
+  const warehouseId = req.params.id;
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+
+  try {
+    // Check if warehouse with given ID exists
+    const existingWarehouse = await knex("warehouses")
+      .where({ id: warehouseId })
+      .first();
+    if (!existingWarehouse) {
+      return res.status(404).json({ error: "Warehouse not found" });
+    }
+
+    // Update warehouse details
+    await knex("warehouses").where({ id: warehouseId }).update({
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    });
+
+    // Fetch updated warehouse details
+    const updatedWarehouse = await knex("warehouses")
+      .where({ id: warehouseId })
+      .first();
+    res.status(200).json(updatedWarehouse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update warehouse" });
+  }
+};
+
 const findOne = async (req, res) => {
   try {
     const warehousesFound = await knex("warehouses").where({
@@ -119,6 +167,7 @@ const findOne = async (req, res) => {
 module.exports = {
   validateRequestBody,
   createWarehouse,
+  updateWarehouse,
   getAll,
   findOne,
 };
