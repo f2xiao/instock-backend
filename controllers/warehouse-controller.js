@@ -2,11 +2,26 @@ const knex = require("knex")(require("../knexfile"));
 
 const getAll = async (_req, res) => {
   try {
-    const data = await knex("warehouses");
+    const searchParam = _req.query.s ? _req.query.s : '';
+    const orderBy = _req.query.order_by ? _req.query.order_by : 'asc';
+    const sortBy = _req.query.sort_by ? _req.query.sort_by : 'id';
+
+    const data = await knex("warehouses")
+      .where('warehouse_name', 'like', `%${searchParam}%`)
+      .orWhere('city', 'like', `%${searchParam}%`)
+      .orWhere('address', 'like', `%${searchParam}%`)
+      .orWhere('country', 'like', `%${searchParam}%`)
+      .orWhere('contact_name', 'like', `%${searchParam}%`)
+      .orWhere('contact_position', 'like', `%${searchParam}%`)
+      .orWhere('contact_phone', 'like', `%${searchParam}%`)
+      .orWhere('contact_email', 'like', `%${searchParam}%`)
+      .orderBy(sortBy, orderBy);
+
     res.status(200).json(data);
   } catch (err) {
     res.status(400).send(`Error retrieving Warehouses: ${err}`);
   }
+
 };
 
 const getInventoriesByWarehouseId = async (req, res) => {
