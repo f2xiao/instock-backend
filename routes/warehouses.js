@@ -16,6 +16,11 @@ router.put(
   warehouseController.updateWarehouse
 );
 
+router.delete(
+  "/:id",
+  warehouseController.deleteWarehouse
+);
+
 // Retrieve all inventories for a given warehouse ID
 router.get("/:id/inventories", warehouseController.getInventoriesByWarehouseId);
 

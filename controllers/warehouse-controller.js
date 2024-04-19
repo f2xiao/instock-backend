@@ -171,6 +171,31 @@ const updateWarehouse = async (req, res) => {
   }
 };
 
+
+const deleteWarehouse = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if the warehouse with the given ID exists
+    const warehouse = await knex("warehouses").where({ id }).first();
+    if (!warehouse) {
+      return res
+        .status(404)
+        .json({ error: `Warehouse with ID ${id} not found` });
+    }
+
+    // Delete the warehouse from the database
+    await knex("warehouses").where({ id }).del();
+
+    // Send a success response
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete warehouse" });
+  }
+};
+
+
 const findOne = async (req, res) => {
   try {
     const warehousesFound = await knex("warehouses").where({
@@ -197,6 +222,7 @@ module.exports = {
   createWarehouse,
   getInventoriesByWarehouseId,
   updateWarehouse,
+  deleteWarehouse,
   getAll,
   findOne,
 };
