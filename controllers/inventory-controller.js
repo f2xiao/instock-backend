@@ -4,7 +4,7 @@ const getAll = async (_req, res) => {
   try {
     const searchParam = _req.query.s ? _req.query.s : '';
     const orderBy = _req.query.order_by ? _req.query.order_by : 'asc';
-    const sortBy = _req.query.sort_by ? _req.query.sort_by : 'id';
+    const sortBy = _req.query.sort_by ? _req.query.sort_by : 'item_name';
 
     const data = await knex
       .select(
@@ -20,7 +20,6 @@ const getAll = async (_req, res) => {
       .join("warehouses", "inventories.warehouse_id", "warehouses.id")
       .where('item_name', 'like', `%${searchParam}%`)
       .orWhere('warehouse_name', 'like', `%${searchParam}%`)
-      .orWhere('description', 'like', `%${searchParam}%`)
       .orWhere('category', 'like', `%${searchParam}%`)
       .orWhere('status', 'like', `%${searchParam}%`)
       .orWhere('quantity', 'like', `%${searchParam}%`)
