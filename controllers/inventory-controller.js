@@ -34,14 +34,14 @@ const getAll = async (_req, res) => {
 const validateRequestBody = (req, res, next) => {
   const { item_name, description, category, status, quantity } = req.body;
 
-  if (!item_name || !description || !category || !status || !quantity) {
+  if (isNaN(quantity)) {
+    return res.status(400).json({ error: "Quantity must be a number" });
+  }
+
+  if (!item_name || !description || !category || !status) {
     return res
       .status(400)
       .json({ error: "Missing required properties in the request body" });
-  }
-
-  if (isNaN(quantity)) {
-    return res.status(400).json({ error: "Quantity must be a number" });
   }
 
   next();
@@ -123,6 +123,7 @@ const getInventoryById = async (req, res) => {
       .select(
         "inventories.id",
         "warehouses.warehouse_name",
+        "inventories.warehouse_id",
         "inventories.item_name",
         "inventories.description",
         "inventories.category",
